@@ -1,4 +1,5 @@
 import { blockchain } from '../initBlockchain.mjs';
+import ResponseModel from '../utilities/ResponseModel.mjs';
 
 export const createTransaction = (req, res, next) => {
   const transaction = req.body;

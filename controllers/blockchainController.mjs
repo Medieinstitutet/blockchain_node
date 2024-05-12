@@ -1,5 +1,6 @@
 import { blockchain } from '../initBlockchain.mjs';
-import { writeFileAsync, readFileAsync } from '../utilities/fileLogger.mjs';
+import ErrorResponse from '../utilities/ErrorResponse.mjs';
+import { writeFileAsync, readFileAsync } from '../middleware/fileLogger.mjs';
 import ResponseModel from '../utilities/ResponseModel.mjs';
 
 export const getBlockchain = async (req, res, next) => {
@@ -10,7 +11,7 @@ export const createBlock = async (req, res, next) => {
   await updateBlockChain();
 
   const lastBlock = blockchain.getLastBlock();
-  const data = blockchain.pendingTransactions;
+  const data = req.body;
   const { nonce, difficulty, timestamp } = blockchain.proofOfWork(
     lastBlock.currBlockHash,
     data
@@ -108,7 +109,7 @@ export const updateChain = (req, res, next) => {
       },
     }));
   } else {
-    res.status(500).json(new ResponseModel({
+    res.status(500).json(new ErrorResponse({
       success: false,
       statusCode: 500,
       data: { message: 'The block was denied', block },
