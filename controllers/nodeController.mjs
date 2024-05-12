@@ -3,7 +3,13 @@ import { blockchain } from '../initBlockchain.mjs';
 export const listMembers = (req, res, next) => {
   res
     .status(200)
-    .json({ success: true, statusCode: 200, data: blockchain.blockchainNodes });
+    .json(
+      new ResponseModel({
+        success: true,
+        statusCode: 200,
+        data: blockchain.blockchainNodes,
+      })
+    );
 };
 
 export const registerNode = (req, res, next) => {
@@ -18,11 +24,13 @@ export const registerNode = (req, res, next) => {
     // Synkronisering, skicka till den nya medlemmen/noden samma medlemmar/noder som jag har
     syncNodes(node.nodeUrl);
 
-    res.status(201).json({
-      success: true,
-      statusCode: 201,
-      data: { message: `The Node ${node.nodeUrl} has been registered!` },
-    });
+    res.status(201).json(
+      new ResponseModel({
+        success: true,
+        statusCode: 201,
+        data: { message: `The Node ${node.nodeUrl} has been registered!` },
+      })
+    );
   } else {
     res.status(400).json({
       success: false,
@@ -32,13 +40,13 @@ export const registerNode = (req, res, next) => {
   }
 };
 
-const syncNodes = (url) => {
+const syncNodes = url => {
   // Skapa en array av alla mina medlemmar/noder samt lägga till mig själv...
   const nodes = [...blockchain.blockchainNodes, blockchain.nodeUrl];
   // Gå igenom varje medlem som finnns i members arrayen
   // Sedan skicka till varje medlem listan av medlemmar
   try {
-    nodes.forEach(async (node) => {
+    nodes.forEach(async node => {
       const body = { nodeUrl: node };
       await fetch(`${url}/api/v1/nodes/register-node`, {
         method: 'POST',

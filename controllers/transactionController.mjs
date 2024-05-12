@@ -5,11 +5,11 @@ export const createTransaction = (req, res, next) => {
 
   const blockIndex = blockchain.addTransaction(transaction);
 
-  res.status(201).json({
+  res.status(201).json(new ResponseModel({
     success: true,
     statusCode: 201,
     data: { message: 'Transaktion was created', transaction, blockIndex },
-  });
+  }));
 };
 
 export const broadcastTransaction = (req, res, next) => {
@@ -31,7 +31,7 @@ export const broadcastTransaction = (req, res, next) => {
     });
   });
 
-  res.status(201).json({
+  res.status(201).json(new ResponseModel({
     success: true,
     statusCode: 201,
     data: {
@@ -39,5 +39,5 @@ export const broadcastTransaction = (req, res, next) => {
       transaction,
       blockIndex,
     },
-  });
+  }));
 };

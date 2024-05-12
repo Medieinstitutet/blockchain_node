@@ -1,11 +1,9 @@
 import { blockchain } from '../initBlockchain.mjs';
-import {
-  writeFileAsync,
-  readFileAsync
-} from '../utilities/fileLogger.mjs';
+import { writeFileAsync, readFileAsync } from '../utilities/fileLogger.mjs';
+import ResponseModel from '../utilities/ResponseModel.mjs';
 
 export const getBlockchain = async (req, res, next) => {
-  res.status(200).json({ success: true, data: blockchain });
+  res.status(200).json(new ResponseModel({ success: true, data: blockchain }));
 };
 
 export const createBlock = async (req, res, next) => {
@@ -70,10 +68,12 @@ export const createBlock = async (req, res, next) => {
     JSON.stringify(blockchain.chainOfBlocks, null, 2)
   );
 
-  res.status(201).json({
-    success: true,
-    data: { message: 'Block created and broadcasted', block },
-  });
+  res.status(201).json(
+    new ResponseModel({
+      success: true,
+      data: { message: 'Block created and broadcasted', block },
+    })
+  );
 };
 
 const updateBlockChain = async () => {
@@ -82,13 +82,13 @@ const updateBlockChain = async () => {
     const newBlockchainData = JSON.parse(blockchainData);
 
     blockchain.chainOfBlocks = newBlockchainData;
-} catch (error) {
-  if(error.code === 'ENOENT') {
-    console.log('The Blockchain JSON file does not exist');
-    return;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('The Blockchain JSON file does not exist');
+      return;
+    }
   }
-}
-}
+};
 
 export const updateChain = (req, res, next) => {
   const block = req.body;
@@ -99,20 +99,20 @@ export const updateChain = (req, res, next) => {
   if (hash && index) {
     blockchain.chainOfBlocks.push(block);
     blockchain.pendingTransactions = [];
-    res.status(201).json({
+    res.status(201).json(new ResponseModel({
       success: true,
       statusCode: 201,
       data: {
         message: 'The block was added and sent to the network',
         block: block,
       },
-    });
+    }));
   } else {
-    res.status(500).json({
+    res.status(500).json(new ResponseModel({
       success: false,
       statusCode: 500,
       data: { message: 'The block was denied', block },
-    });
+    }));
   }
 };
 
@@ -142,9 +142,9 @@ export const syncChain = (req, res, next) => {
     }
   });
 
-  res.status(200).json({
+  res.status(200).json(new ResponseModel({
     success: true,
     statusCode: 200,
     data: { message: 'The synchronization is finished' },
-  });
+  }));
 };

@@ -1,25 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { getBlockchain } from '../controllers/blockchainController.mjs';
+import Blockchain from '../models/Blockchain.mjs';
+import Transaction from '../models/Transaction.mjs';
 
-describe('getBlockchain', () => {
-  it('should return a response containing a "data" field', async () => {
-    // Simulating a minimal response object
-    const mockRes = {
-      status(code) {
-        this.code = code;
-        return this; // allows chaining
-      },
-      json(data) {
-        this.data = data;
-        return this; // allows chaining
-      }
-    };
+describe('Transaction Handling', () => {
+  it('should add a transaction to the pending transactions list', () => {
+    const blockchain = new Blockchain();
+    const transaction = new Transaction(100, 'senderAddress', 'recipientAddress');
+    blockchain.addTransaction(transaction);
 
-    // Execute the function
-    await getBlockchain(null, mockRes, null);
-
-    // Assertions
-    expect(mockRes.code).toBe(200); // Check if the status code is set to 200
-    expect(mockRes.data).toHaveProperty('data'); // Check for the presence of a 'data' field
+    expect(blockchain.pendingTransactions.length).toBe(1); // Check that the transaction list is not empty
+    expect(blockchain.pendingTransactions[0]).toBe(transaction); // Check that the transaction is the one we added
   });
 });
