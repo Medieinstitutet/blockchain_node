@@ -1,0 +1,28 @@
+{
+  "name": "blockchain_node",
+  "version": "1.0.0",
+  "main": "server.mjs",
+  "scripts": {
+    "node-1": "node --env-file=config/config.env server.mjs 5001 http://localhost:5001",
+    "node-2": "node --env-file=config/config.env server.mjs 5002 http://localhost:5002",
+    "dev-1": "nodemon --env-file=config/config.env server.mjs 5001 http://localhost:5001",
+    "dev-2": "nodemon --env-file=config/config.env server.mjs 5002 http://localhost:5002",
+    "dev-3": "nodemon --env-file=config/config.env server.mjs 5003 http://localhost:5003",
+    "debug": "node --env-file=config/config.env server.mjs 5050 http://localhost:5050"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@vitest/ui": "^1.6.0",
+    "nodemon": "^3.1.0",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "uuid": "^9.0.1"
+  }
+}
