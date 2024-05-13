@@ -11,7 +11,7 @@ export const createBlock = async (req, res, next) => {
   await updateBlockChain();
 
   const lastBlock = blockchain.getLastBlock();
-  const data = req.body;
+  const data = blockchain.pendingTransactions;
   const { nonce, difficulty, timestamp } = blockchain.proofOfWork(
     lastBlock.currBlockHash,
     data
@@ -69,12 +69,10 @@ export const createBlock = async (req, res, next) => {
     JSON.stringify(blockchain.chainOfBlocks, null, 2)
   );
 
-  res.status(201).json(
-    new ResponseModel({
-      success: true,
-      data: { message: 'Block created and broadcasted', block },
-    })
-  );
+  res.status(201).json(new ResponseModel({
+    success: true,
+    data: { message: 'Block created and broadcasted', block },
+  }));
 };
 
 const updateBlockChain = async () => {
@@ -83,13 +81,13 @@ const updateBlockChain = async () => {
     const newBlockchainData = JSON.parse(blockchainData);
 
     blockchain.chainOfBlocks = newBlockchainData;
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      console.log('The Blockchain JSON file does not exist');
-      return;
-    }
+} catch (error) {
+  if(error.code === 'ENOENT') {
+    console.log('The Blockchain JSON file does not exist');
+    return;
   }
-};
+}
+}
 
 export const updateChain = (req, res, next) => {
   const block = req.body;

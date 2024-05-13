@@ -1,6 +1,6 @@
 import { blockchain } from '../initBlockchain.mjs';
-import ResponseModel from '../utilities/ResponseModel.mjs';
 import ErrorResponse from '../utilities/ErrorResponse.mjs';
+import ResponseModel from '../utilities/ResponseModel.mjs';
 
 export const listMembers = (req, res, next) => {
   res
